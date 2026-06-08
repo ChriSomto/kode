@@ -1,55 +1,71 @@
-# gradclock - Flutter App Blueprint
+# Gradclock App Blueprint
 
 ## Overview
 
-A one-time-use personal graduation celebration app for Angela from her boyfriend, Femi. The app features a countdown to her graduation, two scheduled celebration moments with messages and a song, and a home screen widget.
+`gradclock` is a simple, one-time-use Flutter mobile app for Android, designed as a personal graduation gift from Femi (in West Africa) to Angela (in the Philippines). The app celebrates Angela's *cum laude* graduation on **June 9, 2026**. It features a beautiful countdown, two scheduled celebration moments with personalized messages and a song, and a home screen widget. The app is designed to be self-contained with all data hardcoded.
 
-## Style, Design, and Features
-
-### Version 1.0
+## Style, Design, and Features (Current Version)
 
 *   **App Name:** gradclock
-*   **Package:** com.example.gradclock
-*   **Color Palette:** Warm cloudy pink-to-yellow gradient (soft coral blush to warm golden yellow).
+*   **Package ID:** com.example.gradclock
+*   **Platform:** Android only
+*   **Color Palette:** A warm, glowing gradient from a soft coral blush to a warm golden yellow, simulating a sunrise.
 *   **Typography:**
-    *   Titles/Headlines: Playfair Display (from `google_fonts`)
-    *   Body/UI Text: Nunito (from `google_fonts`)
-*   **Screens:**
-    *   **Splash Screen:** 4-second animated screen with affirmations.
-    *   **Widget Setup Screen:** One-time instruction screen for adding the home screen widget.
-    *   **Countdown Screen:** The main app screen showing a live countdown to graduation.
-    *   **Message Screen:** Displays special messages at scheduled times.
-*   **Celebration Moments:**
-    *   **Moment 1 (June 9, 2026, 12:00 AM PHT):** Notification, full-screen message, and automatic song playback.
-    *   **Moment 2 (June 9, 2026, 5:00 PM PHT):** Notification and full-screen message.
-*   **Home Screen Widget:**
-    *   A 4x2 widget that displays the countdown or a celebration message.
-    *   Updates periodically in the background.
-*   **Audio:**
-    *   Plays a song automatically for Moment 1.
-    *   Supports background audio.
-*   **Notifications:**
-    *   Schedules two local notifications for the celebration moments.
-*   **Test Mode:**
-    *   A `testMode` flag to switch between test and production configurations for notification scheduling.
+    *   **Primary/Headings:** Playfair Display (via `google_fonts`)
+    *   **Body/Secondary:** Nunito (via `google_fonts`)
+*   **UI Components:**
+    *   Frosted glass-style rounded cards for countdown elements.
+    *   Pill-shaped buttons for actions.
+    *   Full-screen, immersive views with animated gradients.
 
-## Current Plan
+### Core Features Implemented:
 
-### Initial Setup
+*   **Project Scaffolding:** Initial file structure created for screens, services, widgets, and Android-specific resources.
+*   **Dependencies:** All necessary Flutter packages (`flutter_local_notifications`, `timezone`, `flutter_timezone`, `just_audio`, `home_widget`, `workmanager`, `shared_preferences`, `confetti`, `google_fonts`) have been added to `pubspec.yaml`.
+*   **Android Configuration:** `android/app/build.gradle` has been configured for the project, including Kotlin support and Java 8 compatibility.
+*   **Android Home Screen Widget:**
+    *   `gradclock_widget.xml`: Basic layout for the widget created in `android/app/src/main/res/layout/`.
+    *   `gradclock_widget_info.xml`: Widget provider configuration created in `android/app/src/main/res/xml/`.
+    *   `GradclockWidgetProvider.kt`: A basic `AppWidgetProvider` class created in `android/app/src/main/java/com/example/gradclock/` to handle widget updates.
 
-1.  **Update Android Build Configuration:** Modify `android/app/build.gradle.kts` as per the prompt.
-2.  **Update `pubspec.yaml`:** Add all the required dependencies (`flutter_local_notifications`, `timezone`, `flutter_timezone`, `just_audio`, `home_widget`, `workmanager`, `shared_preferences`, `confetti`, `google_fonts`, `flutter_lints`).
-3.  **Update `AndroidManifest.xml`:** Add permissions for notifications, foreground service, and register the widget receiver.
-4.  **Create Project File Structure:** Create the necessary directories and empty files for screens, services, and widgets.
-5.  **Main Function Setup:** Initialize services and settings in `lib/main.dart`.
-6.  **Create Android Widget Layout:** Create `gradclock_widget.xml` and `gradclock_widget_info.xml`.
-7.  **Create Widget Provider:** Create the `GradclockWidgetProvider.kt` file.
-8.  **Implement Splash Screen:** Build the UI and logic for the splash screen.
-9.  **Implement Widget Setup Screen:** Build the UI and logic for the widget setup screen.
-10. **Implement Countdown Screen:** Build the UI and logic for the countdown screen.
-11. **Implement Message Screen:** Build the UI and logic for the message screen.
-12. **Implement Notification Service:** Set up notification scheduling.
-13. **Implement Audio Service:** Set up audio playback.
-14. **Implement Scheduling Service:** Implement the `testMode` logic.
-15. **Implement Home Screen Widget Logic:** Connect the widget to the Flutter app using `home_widget` and `workmanager`.
-16. **Final Polish & Testing:** Ensure all parts work together as expected.
+## Plan for Current Request
+
+**Objective:** Continue building the `gradclock` application based on the user's detailed prompt.
+
+**Action Steps:**
+
+1.  **Configure `AndroidManifest.xml`:**
+    *   Add the `<receiver>` for the `GradclockWidgetProvider`.
+    *   Add necessary permissions: `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`, and `FOREGROUND_SERVICE`.
+
+2.  **Implement `main.dart`:**
+    *   Set up the main entry point for the app.
+    *   Initialize necessary services and packages (`timezone`, `workmanager`).
+    *   Lock screen orientation to portrait mode.
+    *   Define the root `MaterialApp` and basic theme.
+    *   Implement the initial navigation logic (Splash -> Widget Setup -> Countdown).
+
+3.  **Build the Splash Screen (`lib/screens/splash_screen.dart`):**
+    *   Create a full-screen, immersive UI with the sunrise gradient.
+    *   Implement the pulsing gradient background animation.
+    *   Use `AnimatedSwitcher` to fade between the affirmation words: "brilliant", "loved", "unstoppable", "cherished", "celebrated".
+    *   Automatically navigate to the next screen after a 4-second delay.
+
+4.  **Build the Scheduling Service (`lib/services/scheduling_service.dart`):**
+    *   Implement the `testMode` flag.
+    *   Define the logic to determine the correct timezones (`Africa/Lagos` vs. `Asia/Manila`).
+    *   Define the target dates and times for both celebration moments based on `testMode`.
+    *   Expose functions to schedule the notifications using the `flutter_local_notifications` package.
+
+5.  **Build the Notification Service (`lib/services/notification_service.dart`):**
+    *   Initialize `flutter_local_notifications`.
+    *   Request necessary permissions (`POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`).
+    *   Configure the notification channels.
+    *   Set up the callback handler (`onDidReceiveNotificationResponse`) to navigate to the `MessageScreen` with the correct payload.
+
+6.  **Develop Remaining Screens and Services:**
+    *   `AudioService`: Manage audio playback with `just_audio`.
+    *   `WidgetSetupScreen`: Create the one-time instruction screen.
+    *   `CountdownScreen`: Build the main countdown UI with confetti.
+    *   `MessageScreen`: Display the celebration messages.
+    *   `WorkManager` Task: Implement the background task to update the home screen widget periodically.

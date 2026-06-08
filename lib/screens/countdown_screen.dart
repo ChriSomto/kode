@@ -42,7 +42,7 @@ class _CountdownScreenState extends State<CountdownScreen>
   }
 
   void _updateDuration() {
-    final location =
+    final location =  
         tz.getLocation(testMode ? 'Africa/Lagos' : 'Asia/Manila');
     final now = tz.TZDateTime.now(location);
     final target = testMode

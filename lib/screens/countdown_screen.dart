@@ -41,8 +41,8 @@ class _CountdownScreenState extends State<CountdownScreen>
     _isPlaying = (audioHandler as GradclockAudioHandler?)?.isPlaying ?? false;
   }
 
-  void _updateDuration() {
-    final location =  
+  void _updateDuration() { 
+    final location =   
         tz.getLocation(testMode ? 'Africa/Lagos' : 'Asia/Manila');
     final now = tz.TZDateTime.now(location);
     final target = testMode

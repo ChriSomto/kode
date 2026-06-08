@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gradclock/screens/splash_screen.dart';
 import 'package:gradclock/services/scheduling_service.dart' as scheduling;
 import 'package:gradclock/services/notification_service.dart' as notifications;
-import 'package:gradclock/services/audio_service.dart' as audio;
+// import 'package:gradclock/services/audio_service.dart' as audio; // commented out
 import 'package:gradclock/widgets/home_widget_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -26,19 +26,12 @@ void main() async {
 
   runApp(const MyApp());
 
-  // Heavy init after UI is up
-  audio.initAudioService();
-
   // Fire after UI is up
   notifications.requestPermissions();
+  // audio.initAudioService(); // commented out — audio disabled for now
 
   try {
     final prefs = await SharedPreferences.getInstance();
-
-    // TEMP: force reschedule every launch during testing
-    // Remove the next line when sending to Angela
-    await prefs.remove('notifications_scheduled');
-
     final alreadyScheduled = prefs.getBool('notifications_scheduled') ?? false;
     if (!alreadyScheduled) {
       await scheduling.scheduleAllNotifications();
@@ -69,7 +62,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.pink,
         scaffoldBackgroundColor: Colors.transparent,
       ),
-      home: const SplashScreen(), // clean — no stacked HomeWidgetProvider
+      home: const SplashScreen(),
     );
   }
 }

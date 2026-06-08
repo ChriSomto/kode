@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gradclock/services/audio_service.dart';
+// import 'package:gradclock/services/audio_service.dart'; // commented out — audio disabled for now
 
 class MessageScreen extends StatefulWidget {
   final String payload;
@@ -11,25 +11,40 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-  bool _isPlaying = false;
+  // bool _isPlaying = false; // commented out — audio disabled for now
 
   static const String _msg1 =
-      "MIDNIGHT. June 9th. Your day is officially here, Angela.\n\n"
-      "Femi is up in spirit, counting down with you across every mile. "
-      "You did it. Cum laude. Let that sink in.\n\n"
-      "Tonight feels like New Year's Eve but better — because this is YOUR new year. "
-      "A new chapter, a new version of you that already worked so hard and proved everyone right.\n\n"
-      "I am SO proud of you. Now celebrate — you deserve every second of this.";
+      "omg .\n\n"
+      "june 9th is finally here, babyyy(m gonna scream).\n\n"
+      "i've been thinking about this day for like forever, "
+      "but every single day i watched you carry the weight of everything you were building. "
+      "every late night. every moment you were exhausted but kept going anyway. "
+      "every time you chose discipline over rest, chose the future over the easy way out.\n\n"
+      "you did it babyyyyyyyy. cum laude.\n\n"
+      "let that sink in. really sit with it. "
+      "because that's not luck, that's you. that's your mind, your heart, your work. "
+      "nobody can take that from you. ever.\n\n"
+      "i'm on the other side of the world right now and i swear i feel this moment like i'm right there. "
+      "i'm proud of you in a way i don't even have the right words for. "
+      "the kind of proud that sits quiet and deep.\n\n"
+      "you are brilliant. you've always been brilliant. "
+      "but today the world gets to see what i've always known.\n\n"
+      "celebrate tonight. laugh loud. let people love on you. "
+      "you earned every single second of this.\n\n"
+      "i love you,my baby angela. more than you know.\n\n"
+      "— your baby boy femi";
 
   static const String _msg2 =
-      "Hey you.\n\n"
-      "Just checking in on my favorite cum laude graduate. "
-      "I hope today has been everything you deserved.\n\n"
-      "I am so proud of you — not just for the degree, not just for the cum laude — "
-      "but for every late night, every hard moment, every time you kept going.\n\n"
-      "You are brilliant, you are resilient, and you are so deeply loved. "
-      "Enjoy every second of today. The best is still ahead of you.\n\n"
-      "— Femi";
+      "hey beautiful-sexy-hot-smart-cute-tasty-cum-laude-graduate.\n\n"
+      "just checking in on my world smartest and most pretty gf.\n\n"
+      "i hope today has been everything you deserved, "
+      "the feeling of walking across that stage knowing you gave everything you had.\n\n"
+      "i am so proud of you. not just for the degree. not just for the cum laude. "
+      "but for who you are, the way you love, the way you work, for being you"
+      "the way you never let hard things break you\n\n"
+      "you are brilliant. you are resilient. and you are so deeply loved.\n\n"
+      "enjoy every second of today. the best is still ahead of you, im rootinng for you baby \n\n"
+      "— your baby boy femi";
 
   static const LinearGradient _grad1 = LinearGradient(
     begin: Alignment.topLeft,
@@ -46,24 +61,22 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.payload == '1') {
-      _startAudio();
-    }
+    // if (widget.payload == '1') { _startAudio(); } // commented out — audio disabled for now
   }
 
-  Future<void> _startAudio() async {
-    await audioHandler?.play();
-    if (mounted) setState(() => _isPlaying = true);
-  }
+  // Future<void> _startAudio() async {
+  //   await audioHandler?.play();
+  //   if (mounted) setState(() => _isPlaying = true);
+  // }
 
-  Future<void> _toggleAudio() async {
-    if (_isPlaying) {
-      await audioHandler?.pause();
-    } else {
-      await audioHandler?.play();
-    }
-    if (mounted) setState(() => _isPlaying = !_isPlaying);
-  }
+  // Future<void> _toggleAudio() async {
+  //   if (_isPlaying) {
+  //     await audioHandler?.pause();
+  //   } else {
+  //     await audioHandler?.play();
+  //   }
+  //   if (mounted) setState(() => _isPlaying = !_isPlaying);
+  // }
 
   @override
   void dispose() {
@@ -100,37 +113,37 @@ class _MessageScreenState extends State<MessageScreen> {
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 19,
                           color: Colors.white,
-                          height: 1.7,
+                          height: 1.8,
                         ),
                       ),
-                      if (isMoment1) ...[
-                        const SizedBox(height: 48),
-                        GestureDetector(
-                          onTap: _toggleAudio,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 14),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Text(
-                              _isPlaying ? 'Pause Song' : 'Play Song',
-                              style: GoogleFonts.nunito(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 32),
+                      // ── play/pause button commented out ──
+                      // if (isMoment1) ...[
+                      //   const SizedBox(height: 48),
+                      //   GestureDetector(
+                      //     onTap: _toggleAudio,
+                      //     child: Container(
+                      //       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                      //       decoration: BoxDecoration(
+                      //         color: Colors.white.withOpacity(0.3),
+                      //         borderRadius: BorderRadius.circular(50),
+                      //       ),
+                      //       child: Text(
+                      //         _isPlaying ? 'pause song' : 'play song',
+                      //         style: GoogleFonts.nunito(
+                      //           fontSize: 17,
+                      //           fontWeight: FontWeight.w600,
+                      //           color: Colors.white,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ],
+                      const SizedBox(height: 40),
                       Text(
                         'tap anywhere to go back',
                         style: GoogleFonts.nunito(
                           fontSize: 13,
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withOpacity(0.4),
                         ),
                       ),
                     ],

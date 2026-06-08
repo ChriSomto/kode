@@ -4,7 +4,6 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gradclock/screens/message_screen.dart';
-import 'package:gradclock/services/audio_service.dart';
 import 'package:gradclock/services/scheduling_service.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -22,7 +21,6 @@ class _CountdownScreenState extends State<CountdownScreen>
   Duration _duration = const Duration();
   late ConfettiController _confettiController;
   late AnimationController _gradientController;
-  bool _isPlaying = false; // FIX: proper bool declaration
   bool _confettiPlayed = false;
 
   @override
@@ -37,21 +35,18 @@ class _CountdownScreenState extends State<CountdownScreen>
     _updateDuration();
     _timer =
         Timer.periodic(const Duration(seconds: 1), (_) => _updateDuration());
-
-    _isPlaying = (audioHandler as GradclockAudioHandler?)?.isPlaying ?? false;
   }
 
-  void _updateDuration() { 
-    final location =   
+  void _updateDuration() {
+    final location =
         tz.getLocation(testMode ? 'Africa/Lagos' : 'Asia/Manila');
     final now = tz.TZDateTime.now(location);
     final target = testMode
         ? tz.TZDateTime(location, 2026, 6, 8, 5, 33)
-        : tz.TZDateTime(location, 2026, 6, 9, 0, 0); 
+        : tz.TZDateTime(location, 2026, 6, 9, 0, 0);
     if (mounted) {
       setState(() {
         _duration = target.difference(now);
-        _isPlaying = (audioHandler as GradclockAudioHandler?)?.isPlaying ?? false;
       });
     }
     if (_duration.inSeconds <= 0 && !_confettiPlayed) {
@@ -72,18 +67,9 @@ class _CountdownScreenState extends State<CountdownScreen>
     final d = _duration;
     final countdownStr = d.inSeconds > 0
         ? '${d.inDays}d ${d.inHours.remainder(24)}h ${d.inMinutes.remainder(60)}m'
-        : "It's your day, Angela!";
+        : "its your day, babyyyy, wooooohhhhooo!";
     await HomeWidget.saveWidgetData<String>('countdown', countdownStr);
     await HomeWidget.updateWidget(androidName: 'GradclockWidgetProvider');
-  }
-
-  Future<void> _toggleAudio() async {
-    if (_isPlaying) {
-      await audioHandler?.pause();
-    } else {
-      await audioHandler?.play();
-    }
-    setState(() => _isPlaying = (audioHandler as GradclockAudioHandler?)?.isPlaying ?? false);
   }
 
   @override
@@ -105,28 +91,39 @@ class _CountdownScreenState extends State<CountdownScreen>
       body: AnimatedBuilder(
         animation: _gradientController,
         builder: (context, _) {
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color.lerp(const Color(0xFFC2185B), const Color(0xFFE65100),
-                      _gradientController.value)!,
-                  Color.lerp(const Color(0xFF880E4F), const Color(0xFFC2185B),
-                      _gradientController.value)!,
-                ],
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              // Her photo as background
+              Image.asset(
+                'assets/icon/bg.jpeg',
+                fit: BoxFit.cover,
               ),
-            ),
-            child: Stack(
-              children: [
-                SafeArea(
+            
+              // Animated gradient overlay
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color.lerp(const Color(0x99C2185B), const Color(0x99E65100),
+                          _gradientController.value)!,
+                      Color.lerp(const Color(0xCC880E4F), const Color(0xCCC2185B),
+                          _gradientController.value)!,
+                    ],
+                  ),
+                ),
+              ),
+              Stack(
+                children: [
+                  SafeArea(
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'gradclock',
+                          'the count',
                           style: GoogleFonts.playfairDisplay(
                             color: Colors.white.withOpacity(0.9),
                             fontSize: 32,
@@ -136,7 +133,7 @@ class _CountdownScreenState extends State<CountdownScreen>
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Angela, Cum Laude',
+                          'loml, world best cum laude',
                           style: GoogleFonts.nunito(
                             color: Colors.white.withOpacity(0.85),
                             fontSize: 18,
@@ -146,35 +143,13 @@ class _CountdownScreenState extends State<CountdownScreen>
                         _buildCountdown(days, hours, minutes, seconds),
                         const SizedBox(height: 24),
                         Text(
-                          'Something beautiful is coming, Angela',
+                          'its almost here omg hehehe',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.nunito(
                             color: Colors.white.withOpacity(0.9),
                             fontSize: 16,
                           ),
                         ),
-                        if (_isPlaying) ...[
-                          const SizedBox(height: 48),
-                          GestureDetector(
-                            onTap: _toggleAudio,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 32, vertical: 14),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: Text(
-                                'Pause Song',
-                                style: GoogleFonts.nunito(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ),
@@ -188,13 +163,13 @@ class _CountdownScreenState extends State<CountdownScreen>
                     colors: const [
                       Color(0xFFC2185B),
                       Color(0xFFE65100),
-                      Colors.white
+                      Colors.white,
                     ],
                   ),
                 ),
               ],
             ),
-          );
+          ]);
         },
       ),
     );
@@ -206,13 +181,7 @@ class _CountdownScreenState extends State<CountdownScreen>
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.4)),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), 
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

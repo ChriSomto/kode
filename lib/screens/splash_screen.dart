@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gradclock/screens/countdown_screen.dart';
-import 'package:gradclock/screens/widget_setup_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,23 +11,31 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
-  final List<String> _words = ['brilliant', 'loved', 'unstoppable', 'cherished', 'celebrated'];
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  final List<String> _words = [
+    'brilliant',
+    'loved',
+    'unstoppable',
+    'cherished',
+    'celebrated',
+    'going higher'
+  ];
   int _wordIndex = 0;
-  late AnimationController _gradientController;
+  late AnimationController _fadeController;
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
-    _gradientController = AnimationController(
+    _fadeController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat(reverse: true);
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeController.forward();
 
-    // Cycle words every ~800ms
-    Timer.periodic(const Duration(milliseconds: 800), (timer) {
+    Timer.periodic(const Duration(milliseconds: 900), (timer) {
       if (!mounted) { timer.cancel(); return; }
       if (_wordIndex < _words.length - 1) {
         setState(() => _wordIndex++);
@@ -38,31 +44,19 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       }
     });
 
-    // Navigate after 4 seconds
-    Future.delayed(const Duration(seconds: 4), _navigateNext);
+    Future.delayed(const Duration(seconds: 5), _navigateNext);
   }
 
   Future<void> _navigateNext() async {
     if (!mounted) return;
-    bool seen = false;
-    try {
-      final prefs = await SharedPreferences.getInstance()
-          .timeout(const Duration(seconds: 2));
-      seen = prefs.getBool('widget_setup_seen') ?? false;
-    } catch (_) {
-      seen = false; // if prefs hangs, just go to setup screen
-    }
-    if (!mounted) return;
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => seen ? const CountdownScreen() : const WidgetSetupScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const CountdownScreen()),
     );
   }
 
   @override
   void dispose() {
-    _gradientController.dispose();
+    _fadeController.dispose();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
@@ -70,29 +64,41 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedBuilder(
-        animation: _gradientController,
-        builder: (context, _) {
-          return Container(
-            decoration: BoxDecoration(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Her photo as full background
+          Image.asset(
+            'assets/icon/icon.jpeg',
+            fit: BoxFit.cover,
+          ),
+
+          // Dark gradient overlay so text is readable
+          Container(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
                 colors: [
-                  Color.lerp(const Color(0xFFC2185B), const Color.fromARGB(255, 133, 141, 12), _gradientController.value)!,
-                  Color.lerp(const Color(0xFF880E4F), const Color(0xFFC2185B), _gradientController.value)!,
+                  Color(0x55000000), // subtle dark at top
+                  Color(0xCC000000), // darker at bottom for text
                 ],
               ),
             ),
-            child: Center(
+          ),
+
+          // Text content
+          Center(
+            child: FadeTransition(
+              opacity: _fadeController,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'You are',
+                    'you are',
                     style: GoogleFonts.nunito(
                       color: Colors.white.withOpacity(0.85),
-                      fontSize: 20,
+                      fontSize: 22,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -106,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                       textAlign: TextAlign.center,
                       style: GoogleFonts.playfairDisplay(
                         color: Colors.white,
-                        fontSize: 48,
+                        fontSize: 52,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -114,8 +120,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 ],
               ),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

@@ -22,7 +22,7 @@ Future<void> _scheduleTestNotifications() async {
     id: 0,
     title: "It's HERE, Angela!",
     body: "Open me — Femi has something for you!",
-    scheduledDate: tz.TZDateTime(location, 2026, 6, 8, 6, 0), // 2:50 AM Lagos
+    scheduledDate: tz.TZDateTime(location, 2026, 6, 8, 5, 33), // 2:50 AM Lagos
     payload: '1',
   );
 
@@ -30,7 +30,7 @@ Future<void> _scheduleTestNotifications() async {
     id: 1,
     title: "Hey, graduate",
     body: "Femi's thinking of you right now",
-    scheduledDate: tz.TZDateTime(location, 2026, 6, 8, 6, 20), // 3:00 AM Lagos
+    scheduledDate: tz.TZDateTime(location, 2026, 6, 8, 5, 38), // 3:00 AM Lagos
     payload: '2',
   );
 }

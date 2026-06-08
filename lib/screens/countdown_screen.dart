@@ -46,8 +46,8 @@ class _CountdownScreenState extends State<CountdownScreen>
         tz.getLocation(testMode ? 'Africa/Lagos' : 'Asia/Manila');
     final now = tz.TZDateTime.now(location);
     final target = testMode
-        ? tz.TZDateTime(location, 2026, 6, 8, 6, 0)
-        : tz.TZDateTime(location, 2026, 6, 9, 0, 0);
+        ? tz.TZDateTime(location, 2026, 6, 8, 5, 33)
+        : tz.TZDateTime(location, 2026, 6, 9, 0, 0); 
     if (mounted) {
       setState(() {
         _duration = target.difference(now);
